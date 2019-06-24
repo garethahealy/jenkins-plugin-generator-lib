@@ -31,11 +31,11 @@ class DependencyResolverTest {
     void canResolveRecursively() {
         PluginReference kubernetesPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes"), "kubernetes", false)
 
-        DependencyResolver dependencyResolver = new DependencyResolver(new MockedSteps())
+        DependencyResolver dependencyResolver = new DependencyResolver()
         def answer = dependencyResolver.resolve(pluginsUpdateCentre, [kubernetesPlugin])
 
         Assert.assertNotNull(answer)
-        Assert.assertEquals(28, answer.size())
+        Assert.assertTrue(answer.size() >=30)
     }
 
     @Test
@@ -43,19 +43,19 @@ class DependencyResolverTest {
         PluginReference kubernetesPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes"), "kubernetes", false)
         PluginReference kubernetesCredsPinnedPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes-credentials"), "kubernetes-credentials:0.2.0", true)
 
-        DependencyResolver dependencyResolver = new DependencyResolver(new MockedSteps())
+        DependencyResolver dependencyResolver = new DependencyResolver()
         def answer = dependencyResolver.resolve(pluginsUpdateCentre, [kubernetesPlugin, kubernetesCredsPinnedPlugin])
 
         Assert.assertNotNull(answer)
-        Assert.assertEquals(28, answer.size())
-        Assert.assertEquals(2, answer.get("kubernetes-credentials").size())
+        Assert.assertTrue(answer.size() >=30)
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(),2, answer.get("kubernetes-credentials").size())
 
-        Assert.assertEquals(1, answer.get("kubernetes-credentials").findAll {
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(),1, answer.get("kubernetes-credentials").findAll {
             it.comparableVersion.toString() == "0.2.0"
         }.size())
 
-        Assert.assertEquals(1, answer.get("kubernetes-credentials").findAll {
-            it.comparableVersion.toString() == "0.3.0"
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(), 1, answer.get("kubernetes-credentials").findAll {
+            it.comparableVersion.toString() == "0.9.0"
         }.size())
     }
 
@@ -64,18 +64,18 @@ class DependencyResolverTest {
         PluginReference kubernetesPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes"), "kubernetes", false)
         PluginReference kubernetesCredsPinnedPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes-credentials"), "kubernetes-credentials:1.0.0", true)
 
-        DependencyResolver dependencyResolver = new DependencyResolver(new MockedSteps())
+        DependencyResolver dependencyResolver = new DependencyResolver()
         def answer = dependencyResolver.resolve(pluginsUpdateCentre, [kubernetesPlugin, kubernetesCredsPinnedPlugin])
 
         Assert.assertNotNull(answer)
-        Assert.assertEquals(28, answer.size())
+        Assert.assertTrue(answer.toMapString(), answer.size() >=30)
 
-        Assert.assertEquals(1, answer.get("kubernetes-credentials").findAll {
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(),1, answer.get("kubernetes-credentials").findAll {
             it.comparableVersion.toString() == "1.0.0"
         }.size())
 
-        Assert.assertEquals(1, answer.get("kubernetes-credentials").findAll {
-            it.comparableVersion.toString() == "0.3.0"
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(),1, answer.get("kubernetes-credentials").findAll {
+            it.comparableVersion.toString() == "0.9.0"
         }.size())
     }
 
@@ -84,18 +84,18 @@ class DependencyResolverTest {
         PluginReference kubernetesPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes"), "kubernetes", false)
         PluginReference kubernetesCredsPinnedPlugin = new PluginReference(pluginsUpdateCentre.plugins.get("kubernetes-credentials"), "kubernetes-credentials:0.4.0", true)
 
-        DependencyResolver dependencyResolver = new DependencyResolver(new MockedSteps())
+        DependencyResolver dependencyResolver = new DependencyResolver()
         def answer = dependencyResolver.resolve(pluginsUpdateCentre, [kubernetesPlugin, kubernetesCredsPinnedPlugin])
 
         Assert.assertNotNull(answer)
-        Assert.assertEquals(28, answer.size())
+        Assert.assertTrue(answer.size() >=30)
 
-        Assert.assertEquals(1, answer.get("kubernetes-credentials").findAll {
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(),1, answer.get("kubernetes-credentials").findAll {
             it.comparableVersion.toString() == "0.4.0"
         }.size())
 
-        Assert.assertEquals(1, answer.get("kubernetes-credentials").findAll {
-            it.comparableVersion.toString() == "0.3.0"
+        Assert.assertEquals(answer.get("kubernetes-credentials").toListString(),1, answer.get("kubernetes-credentials").findAll {
+            it.comparableVersion.toString() == "0.9.0"
         }.size())
     }
 }

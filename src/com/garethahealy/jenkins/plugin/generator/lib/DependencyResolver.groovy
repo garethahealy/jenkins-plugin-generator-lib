@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Jenkins Plugin Generator Lib
  * %%
- * Copyright (C) 2013 - 2018 Gareth Healy
+ * Copyright (C) 2013 - 2022 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,6 @@ package com.garethahealy.jenkins.plugin.generator.lib
  */
 class DependencyResolver implements Serializable {
 
-    private final steps
-
-    /**
-     * Resolves plugin dependencies
-     *
-     * @param steps jenkins vars steps
-     */
-    DependencyResolver(steps) {
-        this.steps = steps
-    }
-
     /**
      * Builds a map of plugins
      *
@@ -45,7 +34,7 @@ class DependencyResolver implements Serializable {
     Map<String, List<PluginReference>> resolve(final Map updateCentreMap, final List<PluginReference> templatePlugins) {
         Map<String, List<PluginReference>> answer = [:]
         templatePlugins.each { current ->
-            steps.echo("Collecting dependencies for: '${current.toString()}'")
+            println("Collecting dependencies for: '${current.toString()}'")
 
             resolveDependenciesRecursively(updateCentreMap, current, answer)
         }

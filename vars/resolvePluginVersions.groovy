@@ -6,7 +6,7 @@ def call(Map params = [: ]) {
 
     this.echo "Generating plugins text for: '${params.pluginTemplatePath}' using update centre: '${params.updateCentrePath}'"
 
-    def plugins = new Generator(this).process(params.pluginTemplatePath, params.updateCentrePath)
+    def plugins = new Generator().process(params.pluginTemplatePath, params.updateCentrePath)
     def content = new FileLineConverter().convert(plugins)
 
     this.writeFile file: "${WORKSPACE}/plugins.txt", text: content, encoding: "UTF8"

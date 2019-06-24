@@ -28,7 +28,7 @@ class GeneratorTest {
     void canProcess() {
         String localPath = new File("").getAbsolutePath()
 
-        Generator generator = new Generator(new MockedSteps())
+        Generator generator = new Generator()
         List<PluginReference> plugins = generator.process(new File(new URI("file://${localPath}/test/resources/latest-plugins.txt.template")), new File(new URI("file://${localPath}/test/resources/jenkins-2_50_1-update-centre.json")))
 
         Assert.assertNotNull(plugins)
@@ -40,7 +40,7 @@ class GeneratorTest {
     void canHandlePinnedPluginsToLow() {
         String localPath = new File("").getAbsolutePath()
 
-        Generator generator = new Generator(new MockedSteps())
+        Generator generator = new Generator()
         List<PluginReference> plugins = generator.process(new File(new URI("file://${localPath}/test/resources/low-pinned-plugins.txt.template")), new File(new URI("file://${localPath}/test/resources/jenkins-2_50_1-update-centre.json")))
 
         Assert.assertNotNull(plugins)
@@ -56,7 +56,7 @@ class GeneratorTest {
     void canHandleMultipleVersions() {
         String localPath = new File("").getAbsolutePath()
 
-        Generator generator = new Generator(new MockedSteps())
+        Generator generator = new Generator()
         List<PluginReference> plugins = generator.process(new File(new URI("file://${localPath}/test/resources/clashing-plugins.txt.template")), new File(new URI("file://${localPath}/test/resources/jenkins-2_50_1-update-centre.json")))
 
         Assert.assertNotNull(plugins)

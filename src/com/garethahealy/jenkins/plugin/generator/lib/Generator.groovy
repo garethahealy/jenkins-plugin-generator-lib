@@ -2,7 +2,7 @@
  * #%L
  * GarethHealy :: Jenkins Plugin Generator Lib
  * %%
- * Copyright (C) 2013 - 2018 Gareth Healy
+ * Copyright (C) 2013 - 2022 Gareth Healy
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,17 +26,13 @@ import groovy.json.JsonSlurperClassic
  */
 class Generator implements Serializable {
 
-    private final steps
     private final DependencyResolver dependencyResolver
 
     /**
      * Generates a list of plugins used the predefined plugins and jenkins update centre
-     *
-     * @param steps jenkins vars steps
      */
-    Generator(steps) {
-        this.steps = steps
-        this.dependencyResolver = new DependencyResolver(steps)
+    Generator() {
+        this.dependencyResolver = new DependencyResolver()
     }
 
     /**
@@ -73,14 +69,13 @@ class Generator implements Serializable {
     }
 
     private Map parseUpdateCentre(File updateCentrePath) {
-        String content = readFile(updateCentrePath.getCanonicalPath())
-        return new JsonSlurperClassic().parseText(content)
+        return new JsonSlurperClassic().parse(updateCentrePath)
     }
 
     private List<PluginReference> parsePluginTemplate(Map updateCentreMap, File pluginTemplatePath) {
         List<PluginReference> answer = []
 
-        String pluginTemplateContent = readFile(pluginTemplatePath.getCanonicalPath())
+        String pluginTemplateContent = pluginTemplatePath.getText("UTF-8")
         pluginTemplateContent.split('\n').each { line ->
             Map nameMap = PluginReference.parse(line, true)
 
@@ -88,10 +83,6 @@ class Generator implements Serializable {
         }
 
         return answer
-    }
-
-    private String readFile(String path) {
-        return steps.readFile([file: path, encoding: "UTF8"])
     }
 
     private List<PluginReference> flattenResolvedPlugins(final Map<String, List<PluginReference>> resolvedPlugins) {
@@ -108,13 +99,13 @@ class Generator implements Serializable {
                     PluginReference lastReference = PluginReference.sortByVersion(entry.value).last()
                     answer.add(lastReference)
 
-                    steps.echo("Highest -> Plugin '${entry.key}' has '${entry.value.size()}' different versions. Picking highest which is: ${lastReference.toString()}")
+                    println("Highest -> Plugin '${entry.key}' has '${entry.value.size()}' different versions. Picking highest which is: ${lastReference.toString()}")
                 } else {
-                    steps.error "We should never get here!"
+                    throw new Exception("We should never get here!")
                 }
             } else {
                 //If its pinned, always use that version
-                steps.echo("Pinned -> Plugin '${entry.key}' is pinned to '${pinnedReference.toString()}'")
+                println("Pinned -> Plugin '${entry.key}' is pinned to '${pinnedReference.toString()}'")
 
                 answer.add(pinnedReference)
             }
